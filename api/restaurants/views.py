@@ -1,5 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Restaurants
+from .serializers import RestaurantSerializer
 
-def restaurants(request) :
-    return HttpResponse("<h1>Hello World!!</h1>")
+class RestaurantList(APIView):
+    def get(self, request):
+        restaurants = Restaurants.objects.all()
+        serializer = RestaurantSerializer(restaurants, many=True)
+        return Response(serializer.data)
