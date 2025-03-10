@@ -5,8 +5,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'master', 
-                url: "git@github.com:UMukMin/BackEnd.git"
-                credentialsId: 'github-ssh'
+                    url: 'git@github.com:UMukMin/BackEnd.git',
+                    credentialsId: 'github-ssh'
             }
         }
 
