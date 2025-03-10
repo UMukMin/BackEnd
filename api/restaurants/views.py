@@ -7,8 +7,20 @@ from .serializers import RestaurantSerializer
 
 class RestaurantList(APIView):
     def get(self, request):
-        restaurants = Restaurants.objects.select_related('category', 'price_range').all()
-        serializer = RestaurantSerializer(restaurants, many=True)
+        response = 'success'
+        http_status = status.HTTP_200_OK    
+        messages = []
+        result = None
+
+        try:
+            restaurants = Restaurants.objects.select_related('category').all()
+            serializer = RestaurantSerializer(restaurants, many=True)
+            result = serializer.data
+        except Exception as e:
+            response = 'server_error'
+            http_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+            messages = [str(e)]
+            
         return Response(serializer.data)
     
     def post(self, request):
@@ -41,7 +53,7 @@ class RestaurantList(APIView):
 class RestaurantDetail(APIView):
     def get_object(self, pk):
         try:
-            return Restaurants.objects.select_related('category', 'price_range').get(pk=pk)
+            return Restaurants.objects.select_related('category').get(pk=pk)
         except Restaurants.DoesNotExist:
             raise NotFound(detail="Restaurant not found")
             

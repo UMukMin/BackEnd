@@ -1,9 +1,8 @@
 from rest_framework import serializers
-from .models import Restaurants, Category, PriceRange
+from .models import Restaurants, Category
 
 class RestaurantSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
-    price_range = serializers.PrimaryKeyRelatedField(queryset=PriceRange.objects.all())
 
     class Meta:
         model = Restaurants
@@ -11,7 +10,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'idx', 
             'name', 
             'category', 
-            'price_range',
+            'price',
             'region',
             'address', 
             'description', 
@@ -27,5 +26,4 @@ class RestaurantSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['category'] = instance.category.name if instance.category else None
-        representation['price_range'] = instance.price_range.label if instance.price_range else None
         return representation
